@@ -23,18 +23,15 @@ export const useAdmin = (userId: string | undefined) => {
 
 
       const { data, error } = await supabase
-        .from("user_roles")
-        .select("role")
-        .eq("user_id", userId)
-        .eq("role", "admin")
-        .maybeSingle();
+  .from("user_roles")
+  .select("*")
+  .eq("user_id", userId);
 
-
-      console.log("Admin check:", {
-        userId,
-        data,
-        error
-      });
+console.log("Admin check:", {
+  userId,
+  data,
+  error,
+});
 
 
       if (!active) return;
