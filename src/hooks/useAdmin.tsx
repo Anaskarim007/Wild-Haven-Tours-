@@ -8,37 +8,56 @@ export const useAdmin = (userId: string | undefined) => {
   useEffect(() => {
     let active = true;
 
-    if (!userId) {
-      setIsAdmin(false);
-      setChecking(false);
-      return;
-    }
+    const checkAdmin = async () => {
 
-    setChecking(true);
+      if (!userId) {
+        if (active) {
+          setIsAdmin(false);
+          setChecking(false);
+        }
+        return;
+      }
 
-    const check = async () => {
-      // One-time bootstrap: the first signed-in account becomes admin.
-      await supabase.rpc("claim_first_admin");
 
-      const { data } = await supabase
+      setChecking(true);
+
+
+      const { data, error } = await supabase
         .from("user_roles")
         .select("role")
         .eq("user_id", userId)
         .eq("role", "admin")
         .maybeSingle();
 
+
+      console.log("Admin check:", {
+        userId,
+        data,
+        error
+      });
+
+
       if (!active) return;
+
+
       setIsAdmin(!!data);
       setChecking(false);
+
     };
 
-    check();
+
+    checkAdmin();
 
 
     return () => {
       active = false;
     };
+
   }, [userId]);
 
-  return { isAdmin, checking };
+
+  return {
+    isAdmin,
+    checking
+  };
 };
