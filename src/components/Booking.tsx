@@ -221,7 +221,7 @@ const Booking = () => {
                             </SelectTrigger>
                             <SelectContent>
                               {locations.map((loc) => (
-                                <SelectItem key={loc.id} value={loc.slug}>
+                                <SelectItem key={loc.id} value={loc.id}>
                                   {loc.name}
                                 </SelectItem>
                               ))}
