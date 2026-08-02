@@ -69,7 +69,9 @@ const Admin = () => {
   const live = useBookings(!isDemo && isAdmin);
   const [selectedLocation, setSelectedLocation] = useState("all");
   const { locations } = useLocations();
-  const getLocationById = (slug: string) => locations.find((l) => l.slug === slug);
+
+  const getLocationById = (id: string) =>
+    locations.find((l) => l.id === id);
 
   useEffect(() => {
     if (!loading && !user && !isDemo) {
@@ -300,7 +302,7 @@ const Admin = () => {
                       </TableHeader>
                       <TableBody>
                         {filteredBookings.map((booking) => {
-                          const location = getLocationById(booking.location_id);
+                        
                           return (
                             <TableRow key={booking.id} className="border-border">
                               <TableCell>
@@ -314,7 +316,9 @@ const Admin = () => {
                               <TableCell>
                                 <div className="flex items-center gap-2">
                                   <MapPin className="h-3 w-3 text-muted-foreground" />
-                                  <span className="text-sm font-light">{location?.name || booking.location_id}</span>
+                                  <span className="text-sm font-light">
+  {booking.locations?.name || booking.location_id}
+</span>
                                 </div>
                               </TableCell>
                               <TableCell>

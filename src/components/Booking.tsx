@@ -86,6 +86,8 @@ const Booking = () => {
     }
 
     setSubmitting(true);
+    console.log("Selected location:", location);
+console.log("Locations:", locations);
     const { error } = await supabase.from("bookings").insert({
       location_id: location,
       guest_name: name,
@@ -123,9 +125,9 @@ const Booking = () => {
   };
 
   const getLocationLabel = (value: string) => {
-    const loc = locations.find(l => l.slug === value);
-    return loc?.name || value;
-  };
+  const loc = locations.find((l) => l.id === value);
+  return loc?.name ?? value;
+};
 
   const formatDateRange = () => {
     if (!dateRange?.from) return "";

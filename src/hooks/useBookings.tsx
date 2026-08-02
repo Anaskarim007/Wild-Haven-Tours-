@@ -16,6 +16,10 @@ export interface BookingRecord {
   status: string;
   notes: string | null;
   created_at: string;
+
+  locations?: {
+    name: string;
+  } | null;
 }
 
 export const useBookings = (enabled: boolean) => {
@@ -26,8 +30,13 @@ export const useBookings = (enabled: boolean) => {
     setLoading(true);
     const { data, error } = await supabase
       .from("bookings")
-      .select("*")
-      .order("check_in", { ascending: true });
+.select(`
+  *,
+  locations (
+    name
+  )
+`)
+.order("check_in", { ascending: true });
 
     if (error) {
       toast.error("Could not load bookings");
@@ -56,14 +65,19 @@ export const useBookings = (enabled: boolean) => {
   };
 
   const deleteBooking = async (id: string) => {
-    const { error } = await supabase.from("bookings").delete().eq("id", id);
-    if (error) {
-      toast.error("Could not delete booking");
-      return;
-    }
-    setBookings((prev) => prev.filter((b) => b.id !== id));
-    toast.success("Booking deleted");
-  };
+  const { error } = await supabase
+    .from("bookings")
+    .delete()
+    .eq("id", id);
+
+  if (error) {
+    toast.error("Could not delete booking");
+    return;
+  }
+
+  setBookings((prev) => prev.filter((b) => b.id !== id));
+  toast.success("Booking deleted");
+};
 
   return { bookings, loading, refresh: fetchBookings, updateStatus, deleteBooking };
 };
