@@ -100,9 +100,10 @@ const Booking = () => {
     setSubmitting(false);
 
     if (error) {
-      toast.error("Could not send your request. Please try again.");
-      return;
-    }
+  console.error(error);
+  toast.error(error.message);
+  return;
+}
 
     setDirection(1);
     setStep(3);
