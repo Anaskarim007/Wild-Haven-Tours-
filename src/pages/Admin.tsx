@@ -1,3 +1,4 @@
+import { useContactMessages } from "@/hooks/useContactMessages";
 import { useState, useEffect, useMemo } from "react";
 import { motion } from "framer-motion";
 import { format, parseISO } from "date-fns";
@@ -69,7 +70,7 @@ const Admin = () => {
   const live = useBookings(!isDemo && isAdmin);
   const [selectedLocation, setSelectedLocation] = useState("all");
   const { locations } = useLocations();
-
+const contactMessages = useContactMessages(isAdmin);
   const getLocationById = (id: string) =>
     locations.find((l) => l.id === id);
 
@@ -85,8 +86,11 @@ const Admin = () => {
     () =>
       selectedLocation === "all"
         ? bookings
-        : bookings.filter((b) => b.location_id === selectedLocation),
-    [bookings, selectedLocation]
+       : bookings.filter((b) => {
+    const location = locations.find((l) => l.id === b.location_id);
+    return location?.slug === selectedLocation;
+  }),
+    [bookings, selectedLocation, locations]
   );
 
   const stats = useMemo(() => {
@@ -426,9 +430,33 @@ const Admin = () => {
               className="mt-16"
             >
               <LocationsManager />
+              <div className="mt-10">
+  <h2 className="text-2xl font-light mb-6">
+    Contact Messages
+  </h2>
+
+  {contactMessages.messages.length === 0 ? (
+    <p>No messages yet.</p>
+  ) : (
+    contactMessages.messages.map((msg) => (
+      <Card key={msg.id} className="p-5 mb-4">
+        <p><strong>Name:</strong> {msg.name}</p>
+        <p><strong>Email:</strong> {msg.email}</p>
+        <p><strong>Subject:</strong> {msg.subject}</p>
+        <p><strong>Message:</strong> {msg.message}</p>
+
+        <p className="text-xs text-muted-foreground mt-3">
+          {new Date(msg.created_at).toLocaleString()}
+        </p>
+      </Card>
+    ))
+  )}
+</div>
             </motion.div>
           )}
+          
         </div>
+       
       </main>
 
       <Footer />

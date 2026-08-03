@@ -10,6 +10,7 @@ import { Card } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { User, Mail, MessageSquare, FileText } from "lucide-react";
 import bannerImage from "@/assets/detail-meadow-1.jpg";
+import { supabase } from "@/integrations/supabase/client";
 
 const Contact = () => {
   const { toast } = useToast();
@@ -30,22 +31,45 @@ const Contact = () => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
+const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+  setIsSubmitting(true);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
+  const { error } = await supabase
+    .from("contact_messages")
+    .insert([
+      {
+        name: formData.name,
+        email: formData.email,
+        subject: formData.subject,
+        message: formData.message,
+      },
+    ]);
 
-    // Simulate form submission
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-
+  if (error) {
     toast({
-      title: "Message sent",
-      description: "We'll get back to you as soon as possible.",
+      title: "Error",
+      description: error.message,
+      variant: "destructive",
     });
-
-    setFormData({ name: "", email: "", subject: "", message: "" });
     setIsSubmitting(false);
-  };
+    return;
+  }
+
+  toast({
+    title: "Message sent",
+    description: "We'll get back to you as soon as possible.",
+  });
+
+  setFormData({
+    name: "",
+    email: "",
+    subject: "",
+    message: "",
+  });
+
+  setIsSubmitting(false);
+};
 
   return (
     <div className="min-h-screen bg-background overflow-x-hidden">
