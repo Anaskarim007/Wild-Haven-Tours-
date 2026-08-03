@@ -37,7 +37,7 @@ console.log("Admin check:", {
       if (!active) return;
 
 
-      setIsAdmin(!!data);
+      setIsAdmin(data && data.length > 0);
       setChecking(false);
 
     };
