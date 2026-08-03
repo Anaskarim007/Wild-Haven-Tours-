@@ -162,7 +162,7 @@ const LocationsManager = () => {
                   <p className="text-xs text-muted-foreground font-light">{location.region}</p>
                 </div>
                 <div className="flex items-center justify-between text-xs font-light text-muted-foreground">
-                  <span>${location.price}/night</span>
+                  <span>PKR{location.price}/night</span>
                   <span>★ {location.rating}</span>
                   <span>{location.images.length + (location.image ? 1 : 0)} photos</span>
                 </div>

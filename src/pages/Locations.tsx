@@ -131,7 +131,7 @@ const Locations = () => {
                       </div>
                       <div className="flex items-center justify-between">
                         <div>
-                          <span className="text-xl font-light text-foreground">${location.price}</span>
+                          <span className="text-xl font-light text-foreground">PKR{location.price}</span>
                           <span className="text-muted-foreground text-xs font-light">/night</span>
                         </div>
                         <Button variant="ghost" size="sm" className="text-primary hover:text-primary/80 text-xs font-light">
